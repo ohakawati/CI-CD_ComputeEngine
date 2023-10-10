@@ -1,0 +1,25 @@
+# Create the new instance template
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: create-instance-template
+  args:
+    - compute
+    - instance-templates
+    - create-with-container
+    - cloud-build-instance-template-$_ENV-$SHORT_SHA
+    - --custom-cpu=1
+    - --custom-memory=2GB
+    - --boot-disk-size=20GB
+    - --region=us-central1
+    - --subnet=default
+    - --tags=http-server
+    - --container-image
+    - us-central1-docker.pkg.dev/prj-gradient-omar/python-repo/python-image:latest
+
+ # # create the managed instance group
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args: ['-c','gcloud compute instance-groups managed create cloudbuild-mig --template cloud-build-instance-template-$_ENV-$SHORT_SHA  --size 1 --region us-central1']  
+
+options:
+ logging: CLOUD_LOGGING_ONLY
