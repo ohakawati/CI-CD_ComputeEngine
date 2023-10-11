@@ -16,7 +16,7 @@ steps:
     - --container-image
     - us-central1-docker.pkg.dev/prj-gradient-omar/python-repo/python-image:latest
 
- # # create the managed instance group
+#creates managed instance group
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args: ['-c','gcloud compute instance-groups managed create cloudbuild-mig --template cloud-build-instance-template-$_ENV-$SHORT_SHA  --size 1 --region us-central1']  
