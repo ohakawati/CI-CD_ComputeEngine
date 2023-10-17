@@ -21,5 +21,16 @@ steps:
   entrypoint: 'bash'
   args: ['-c','gcloud compute instance-groups managed create cloudbuild-mig --template cloud-build-instance-template-$_ENV-$SHORT_SHA  --size 1 --region us-central1']  
 
+# Create an autoscaler policy and attach it to the managed instance group
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      gcloud compute instance-groups managed set-autoscaling cloudbuild-mig \
+        --region=us-central1 \
+        --max-num-replicas=10 \
+        --target-cpu-utilization=0.7 \
+        --cool-down-period=60
 options:
  logging: CLOUD_LOGGING_ONLY
