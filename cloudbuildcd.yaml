@@ -36,17 +36,24 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args: ['clone', 'https://github.com/OmarHaka/cloud-Pythonweb.git', '--branch=cloud-build-CDcreate', 'app']
   
+steps:
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
   args:
-      - '-c'
-      - |
-        # Get the deployed URL and store it in an environment variable
-        export FLASK_APP_URL=$(gcloud app browse --quiet)
-        # Install JMeter (if not using a pre-installed Docker image)
-        apt-get update && apt-get install -y jmeter
-        # Run the JMeter test plan
-        jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=$FLASK_APP_URL -l results.jtl -e -o report/
+    - '-c'
+    - |
+      # Get the deployed URL and store it in an environment variable
+      export FLASK_APP_URL=$(gcloud app browse --quiet)
+      # Create a file called env_vars_file and store the FLASK_APP_URL in it
+      echo "FLASK_APP_URL=$FLASK_APP_URL" > env_vars_file
+      
+- name: 'gcr.io/cloud-builders/jmeter'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      # Run the JMeter test plan with the FLASK_APP_URL environment variable
+      jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=$FLASK_APP_URL -l results.jtl -e -o report/
         
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'report/index.html', 'gs://omar_python']
