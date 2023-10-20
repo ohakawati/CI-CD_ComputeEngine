@@ -36,23 +36,41 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args: ['clone', 'https://github.com/OmarHaka/cloud-Pythonweb.git', '--branch=cloud-build-CDcreate', 'app']
   
-steps:
 - name: 'gcr.io/cloud-builders/gcloud'
+  id: get-instance-names
   entrypoint: 'bash'
   args:
     - '-c'
     - |
-      # Get the deployed URL and store it in an environment variable
-      export FLASK_APP_URL=$(gcloud app browse --quiet)
-      # Create a file called env_vars_file and store the FLASK_APP_URL in it
-      echo "FLASK_APP_URL=$FLASK_APP_URL" > env_vars_file
-      
-- name: 'gcr.io/cloud-builders/jmeter'
+      INSTANCES=$(gcloud compute instance-groups managed list-instances cloudbuild-mig --region=us-central1 --format='value(NAME)')
+      export INSTANCE_NAMES=$(echo $INSTANCES | tr " " "\n" | tr "\n" "," | sed 's/,$//')
+
+  # Get the external IP addresses of the instances
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: get-external-ips
   entrypoint: 'bash'
   args:
     - '-c'
     - |
-      # Run the JMeter test plan with the FLASK_APP_URL environment variable
+      EXTERNAL_IPS=$(gcloud compute instances describe $INSTANCE_NAMES --region=us-central1 --format='value(networkInterfaces[0].accessConfigs[0].natIP)')
+      export FLASK_APP_URL=$(echo $EXTERNAL_IPS | cut -d " " -f 1)
+
+  # Install JMeter (if not using a pre-installed Docker image)
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: install-jmeter
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      apt-get update && apt-get install -y jmeter
+
+  # Run the JMeter test plan
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: run-jmeter
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
       jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=$FLASK_APP_URL -l results.jtl -e -o report/
         
 - name: 'gcr.io/cloud-builders/gsutil'
