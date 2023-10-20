@@ -30,7 +30,25 @@ steps:
       gcloud compute instance-groups managed set-autoscaling cloudbuild-mig \
         --region=us-central1 \
         --max-num-replicas=10 \
-        --target-cpu-utilization=0.3 \
+        --target-cpu-utilization=0.5 \
         --cool-down-period=60
+        
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/OmarHaka/cloud-Pythonweb.git', '--branch=cloud-build-CDcreate', 'app']
+  
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+      - '-c'
+      - |
+        # Get the deployed URL and store it in an environment variable
+        export FLASK_APP_URL=$(gcloud app browse --quiet)
+        # Install JMeter (if not using a pre-installed Docker image)
+        apt-get update && apt-get install -y jmeter
+        # Run the JMeter test plan
+        jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=$FLASK_APP_URL -l results.jtl -e -o report/
+        
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ['cp', 'report/index.html', 'gs://your-bucket/load_test_reports/${_BRANCH_NAME}/']
 options:
  logging: CLOUD_LOGGING_ONLY
