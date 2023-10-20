@@ -40,7 +40,7 @@ steps:
   args:
     - '-c'
     - |
-      jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=35.194.9.157 -l results.jtl -e -o report/
+      ./jmeter -n -t app/load_test_plan.jmx -Jflask_app_url=35.194.9.157 -l results.jtl -e -o report/
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ['cp', 'report/index.html', 'gs://omar_python']
   
