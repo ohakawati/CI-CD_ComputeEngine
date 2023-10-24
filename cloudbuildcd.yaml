@@ -29,8 +29,9 @@ steps:
     - |
       gcloud compute instance-groups managed set-autoscaling cloudbuild-mig \
         --region=us-central1 \
+        --min-num-replicas=1 \
         --max-num-replicas=10 \
-        --target-cpu-utilization=0.5 \
+        --target-cpu-utilization=0.7 \
         --cool-down-period=60
         
 options:
