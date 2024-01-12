@@ -21,13 +21,29 @@ Steps are as follows:
 
 
 1.Continuous Integration(CI Pipeline):
+
+
 -A Developer makes the changes in the code, fixes the bugs, and pushes it to the application repository.
+
+
 -Cloud build then invokes triggers either manually or automatically by the events on the repository such as pushes or pull requests.
+
+
 -Once the trigger gets invoked by any events, cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as building the docker image from Dockerfile provided and pushing it to the artifact registry configured.
+
+
 -Once the image with the new tag got pushed to the Artifact Registry.it will get updated in the instance-template used for creating the managed instance group of the compute engine.
+
+
 2.Continuous Deployment(CD Pipeline):
+
+
 -Cloud build then invokes triggers either manually or automatically by the events on the repository branch such as pushes or pull requests
+
+
 -Once the trigger gets invoked by any events, cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as building the instance template containing the image stored in Artifact registry and creating the managed instance group with container running in it.
+
+
 -Creating another trigger,Once the trigger gets invoked by any events,cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as updating the MIG with a new version of instance-template. 
 ![image](https://github.com/ohakawati/CI-CD_ComputeEngine/assets/89810188/4dc33d3b-3774-4ed4-b722-0dd9e517cac7)
 
