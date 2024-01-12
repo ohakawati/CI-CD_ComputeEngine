@@ -14,7 +14,7 @@ steps:
     - --subnet=default
     - --tags=http-server
     - --container-image
-    - us-central1-docker.pkg.dev/prj-gradient-omar/python-repo/python-image:latest
+    - us-central1-docker.pkg.dev/$PROJECTID/python-repo/python-image:latest
 
 #creates managed instance group
 - name: 'gcr.io/cloud-builders/gcloud'
