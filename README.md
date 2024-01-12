@@ -29,7 +29,7 @@ Steps are as follows:
 -Cloud build then invokes triggers either manually or automatically by the events on the repository branch such as pushes or pull requests
 -Once the trigger gets invoked by any events, cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as building the instance template containing the image stored in Artifact registry and creating the managed instance group with container running in it.
 -Creating another trigger,Once the trigger gets invoked by any events,cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as updating the MIG with a new version of instance-template. 
-![image](https://github.com/ohakawati/CI-CD_ComputeEngine/assets/89810188/0639f115-3355-427d-b3ea-3ae404649e5e)
+![image](https://github.com/ohakawati/CI-CD_ComputeEngine/assets/89810188/4dc33d3b-3774-4ed4-b722-0dd9e517cac7)
 
 
 For Continuos integration yaml a load test is included but commented out. A report on the load test for the managed instance group is saved to a Google Cloud Storage bucket for review.
