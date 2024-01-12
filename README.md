@@ -38,13 +38,13 @@ Steps are as follows:
 2.Continuous Deployment(CD Pipeline):
 
 
--Cloud build then invokes triggers either manually or automatically by the events on the repository branch such as pushes or pull requests
+-Cloud build then invokes a trigger either manually or automatically by the events on the repository branch such as pushes or pull requests
 
 
--Once the trigger gets invoked by any events, cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as building the instance template containing the image stored in Artifact registry and creating the managed instance group with container running in it.
+-Once the trigger gets invoked by any events, cloud build then executes the instructions written in the build config file (cloudbuildcd.yaml) such as building the instance template containing the image stored in Artifact registry and creating the managed instance group with container running in it.
 
 
--Creating another trigger,Once the trigger gets invoked by any events,cloud build then executes the instructions written in the build config file (cloudbuild.yaml) such as updating the MIG with a new version of instance-template. 
+-Creating another trigger,Once the trigger gets invoked by any events,cloud build then executes updating your MIG written in the build config file (cloudbuildcd2.yaml). Now that your MIG is up there only this update build yaml will be needed in updating the MIG with a new version of instance-template. 
 ![image](https://github.com/ohakawati/CI-CD_ComputeEngine/assets/89810188/4dc33d3b-3774-4ed4-b722-0dd9e517cac7)
 
 
